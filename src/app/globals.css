@@ -1,26 +1,77 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ==========================================================================
+   SecondCart Design System - CSS Variables & Semantic Tokens
+   ========================================================================== */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root {
+  /* Core Brand & Action Tokens */
+  --primary: #059669;            /* Emerald Green (Primary Actions, CTAs, Highlights) */
+  --primary-hover: #047857;      /* Dark Emerald (Hover State) */
+  --primary-foreground: #ffffff; /* High-contrast text on Primary elements */
+
+  /* Neutral Surface & Layout Tokens (Light Mode) */
+  --background: #f8fafc;        /* Off White (Page Canvas Background) */
+  --surface: #ffffff;           /* Pure White (Product Cards, Modals, Panels) */
+  --foreground: #0f172a;        /* Dark Slate (Headings, Primary Text) */
+  --muted: #64748b;             /* Gray (Secondary Text, Metadata, Subtitles) */
+  --border: #e2e8f0;            /* Light Gray (Card Outlines, Dividers, Input Borders) */
+
+  /* Radius Root Values */
+  --base-radius-sm: 0.375rem;   /* 6px - Badges, Pills, Tags */
+  --base-radius-md: 0.5rem;     /* 8px - Form Controls, Standard Buttons */
+  --base-radius-lg: 0.75rem;    /* 12px - Product Cards, Modals */
+  --base-radius-xl: 1rem;       /* 16px - Large Containers, Hero Banners */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Core Brand Tokens (Dark Mode) */
+    --primary: #10b981;          /* Emerald 500 (Vibrant contrast on dark surfaces) */
+    --primary-hover: #059669;    /* Dark Emerald */
+    --primary-foreground: #ffffff;
+
+    /* Neutral Surface & Layout Tokens (Dark Mode) */
+    --background: #0f172a;      /* Dark Slate (Dark Canvas Background) */
+    --surface: #1e293b;         /* Slate 800 (Elevated Cards & Containers) */
+    --foreground: #f8fafc;      /* Off White (Primary Text) */
+    --muted: #94a3b8;           /* Slate 400 (Secondary Text) */
+    --border: #334155;          /* Slate 700 (Subtle Outlines & Dividers) */
   }
 }
 
+/* ==========================================================================
+   Tailwind CSS v4 Theme Token Bindings
+   ========================================================================== */
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+
+  --font-sans: var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --radius-sm: var(--base-radius-sm);
+  --radius-md: var(--base-radius-md);
+  --radius-lg: var(--base-radius-lg);
+  --radius-xl: var(--base-radius-xl);
+}
+
+/* ==========================================================================
+   Base Element Defaults
+   ========================================================================== */
+
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
