@@ -14,6 +14,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
     isWishlisted: false,
     isVerifiedSeller: true,
     postedAt: "2 hours ago",
+    sellerName: "Aarav Sharma",
+    sellerCampus: "IIT Delhi — B.Tech CSE, 3rd Year",
   },
   {
     id: "prod-2",
@@ -28,6 +30,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
     isWishlisted: true,
     isVerifiedSeller: true,
     postedAt: "4 hours ago",
+    sellerName: "Priya Nair",
+    sellerCampus: "NIT Trichy — B.Tech EEE, 2nd Year",
   },
   {
     id: "prod-3",
@@ -42,6 +46,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
     isWishlisted: false,
     isVerifiedSeller: true,
     postedAt: "6 hours ago",
+    sellerName: "Rohan Verma",
+    sellerCampus: "BITS Pilani — M.Tech, 1st Year",
   },
   {
     id: "prod-4",
@@ -56,6 +62,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
     isWishlisted: false,
     isVerifiedSeller: false,
     postedAt: "1 day ago",
+    sellerName: "Sneha Patel",
+    sellerCampus: "DTU — B.Tech ECE, 4th Year",
   },
   {
     id: "prod-5",
@@ -70,6 +78,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
     isWishlisted: false,
     isVerifiedSeller: true,
     postedAt: "1 day ago",
+    sellerName: "Karan Mehta",
+    sellerCampus: "VIT Vellore — MBA, 1st Year",
   },
   {
     id: "prod-6",
@@ -84,6 +94,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
     isWishlisted: false,
     isVerifiedSeller: false,
     postedAt: "2 days ago",
+    sellerName: "Divya Ramesh",
+    sellerCampus: "SRM Chennai — B.Tech IT, 3rd Year",
   },
   {
     id: "prod-7",
@@ -98,6 +110,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
     isWishlisted: false,
     isVerifiedSeller: true,
     postedAt: "2 days ago",
+    sellerName: "Arjun Nambiar",
+    sellerCampus: "NSIT Delhi — B.Tech CSE, 2nd Year",
   },
   {
     id: "prod-8",
@@ -112,6 +126,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
     isWishlisted: false,
     isVerifiedSeller: true,
     postedAt: "3 days ago",
+    sellerName: "Meera Iyer",
+    sellerCampus: "PESIT Bangalore — B.Tech Mech, 4th Year",
   },
   {
     id: "prod-9",
@@ -126,6 +142,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
     isWishlisted: false,
     isVerifiedSeller: false,
     postedAt: "3 days ago",
+    sellerName: "Rahul Gupta",
+    sellerCampus: "Jadavpur University — B.Tech Civil, 3rd Year",
   },
   {
     id: "prod-10",
@@ -140,6 +158,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
     isWishlisted: false,
     isVerifiedSeller: true,
     postedAt: "4 days ago",
+    sellerName: "Anjali Singh",
+    sellerCampus: "IIT Bombay — B.Tech Physics, 2nd Year",
   },
   {
     id: "prod-11",
@@ -154,6 +174,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
     isWishlisted: false,
     isVerifiedSeller: true,
     postedAt: "5 days ago",
+    sellerName: "Vikram Reddy",
+    sellerCampus: "JNTU Hyderabad — M.Tech CSE, 1st Year",
   },
   {
     id: "prod-12",
@@ -168,6 +190,8 @@ export const SAMPLE_PRODUCTS: Product[] = [
     isWishlisted: false,
     isVerifiedSeller: true,
     postedAt: "5 days ago",
+    sellerName: "Nisha Kapoor",
+    sellerCampus: "Manipal University — B.Tech ECE, 4th Year",
   },
 ];
 
