@@ -47,6 +47,7 @@ export default function Home() {
     if (filters.condition !== "All") count++;
     if (filters.location !== "All") count++;
     if (filters.onlyVerified) count++;
+    if (filters.searchQuery.trim() !== "") count++;
     return count;
   }, [filters]);
 
@@ -92,13 +93,23 @@ export default function Home() {
       result = result.filter((p) => p.isVerifiedSeller);
     }
 
+    // Search Query: match title or description (case-insensitive)
+    if (filters.searchQuery.trim() !== "") {
+      const q = filters.searchQuery.trim().toLowerCase();
+      result = result.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.description.toLowerCase().includes(q)
+      );
+    }
+
     // Sorting
     if (sortOption === "price-asc") {
       result.sort((a, b) => a.price - b.price);
     } else if (sortOption === "price-desc") {
       result.sort((a, b) => b.price - a.price);
     } else {
-      // Newest
+      // Newest: preserve insertion order (id ascending)
       result.sort((a, b) => a.id.localeCompare(b.id));
     }
 
@@ -144,6 +155,11 @@ export default function Home() {
               onViewModeChange={setViewMode}
               onOpenMobileFilters={() => setIsMobileFiltersOpen(true)}
               activeFilterCount={activeFilterCount}
+              searchQuery={filters.searchQuery}
+              onSearchChange={(q) => handleFilterChange({ searchQuery: q })}
+              filters={filters}
+              onFilterChange={handleFilterChange}
+              onResetFilters={handleResetFilters}
             />
 
             {/* Product Grid (4-column on desktop, 2-column on tablet, 1/2 on mobile) */}
