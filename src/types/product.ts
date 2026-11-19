@@ -18,6 +18,8 @@ export interface Product {
   isWishlisted?: boolean;
   isVerifiedSeller?: boolean;
   postedAt: string;
+  sellerName?: string;
+  sellerCampus?: string;
 }
 
 export type SortOption = "newest" | "price-asc" | "price-desc";
