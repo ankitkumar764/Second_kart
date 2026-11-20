@@ -3,8 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { SAMPLE_PRODUCTS } from "@/lib/data/products";
 import WishlistButton from "@/components/products/WishlistButton";
+import RecordRecentlyViewed from "@/components/products/RecordRecentlyViewed";
 import { connectDB } from "@/lib/mongodb";
 import ProductModel, { IProduct } from "@/models/Product";
+import { Product } from "@/types/product";
 
 /* ------------------------------------------------------------------ */
 /*  Dynamic rendering — supports both static sample & DB products       */
@@ -187,6 +189,9 @@ export default async function ProductDetailPage({
 
   return (
     <main className="min-h-screen bg-[#F5F5F5]">
+      {/* Record recently viewed product */}
+      <RecordRecentlyViewed product={product as unknown as Product} />
+
       {/* ---- Breadcrumb ---- */}
       <div className="bg-white border-b border-[#E5E5E5]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3">
