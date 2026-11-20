@@ -69,6 +69,13 @@ export default function Navbar() {
           </Link>
 
           <Link
+            href="/recently-viewed"
+            className="text-xs sm:text-sm font-medium text-[#777777] hover:text-[#171717] transition-colors py-1"
+          >
+            Recently Viewed
+          </Link>
+
+          <Link
             href="/how-it-works"
             className="text-xs sm:text-sm font-medium text-[#777777] hover:text-[#171717] transition-colors py-1"
           >
@@ -209,6 +216,13 @@ export default function Navbar() {
                 className="flex items-center px-3 py-2.5 text-sm font-medium text-[#777777] hover:text-[#171717] hover:bg-[#F5F5F5] rounded-md"
               >
                 Categories
+              </Link>
+              <Link
+                href="/recently-viewed"
+                onClick={closeMenu}
+                className="flex items-center px-3 py-2.5 text-sm font-medium text-[#777777] hover:text-[#171717] hover:bg-[#F5F5F5] rounded-md"
+              >
+                Recently Viewed
               </Link>
               <Link
                 href="/how-it-works"
