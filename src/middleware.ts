@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { verifyToken, AUTH_COOKIE_NAME } from "@/lib/auth/token";
 
-const PROTECTED_ROUTES = ["/sell", "/profile", "/my-listings"];
+const PROTECTED_ROUTES = ["/sell", "/profile", "/my-listings", "/wishlist"];
 const AUTH_ROUTES = ["/login", "/signup"];
 
 export async function middleware(request: NextRequest) {
@@ -35,6 +35,7 @@ export const config = {
     "/sell/:path*",
     "/profile/:path*",
     "/my-listings/:path*",
+    "/wishlist/:path*",
     "/login",
     "/signup",
   ],

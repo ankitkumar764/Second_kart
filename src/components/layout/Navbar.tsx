@@ -81,6 +81,22 @@ export default function Navbar() {
           {user ? (
             <div className="flex items-center gap-3">
               <Link
+                href="/wishlist"
+                className="text-xs sm:text-sm font-medium text-[#777777] hover:text-[#171717] transition-colors py-1 flex items-center gap-1"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="w-3.5 h-3.5 text-red-500"
+                >
+                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                </svg>
+                Wishlist
+              </Link>
+              <Link
                 href="/my-listings"
                 className="text-xs sm:text-sm font-medium text-[#777777] hover:text-[#171717] transition-colors py-1"
               >
@@ -207,6 +223,23 @@ export default function Navbar() {
           <div className="border-t border-[#E5E5E5] pt-6 space-y-3">
             {user ? (
               <div className="space-y-3">
+                <Link
+                  href="/wishlist"
+                  onClick={closeMenu}
+                  className="flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-[#171717] bg-[#F5F5F5] rounded-md"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="w-4 h-4 text-red-500"
+                  >
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                  </svg>
+                  My Wishlist
+                </Link>
                 <Link
                   href="/my-listings"
                   onClick={closeMenu}
