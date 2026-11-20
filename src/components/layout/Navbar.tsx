@@ -80,6 +80,12 @@ export default function Navbar() {
         <div className="hidden sm:flex items-center gap-4">
           {user ? (
             <div className="flex items-center gap-3">
+              <Link
+                href="/my-listings"
+                className="text-xs sm:text-sm font-medium text-[#777777] hover:text-[#171717] transition-colors py-1"
+              >
+                My Listings
+              </Link>
               <div className="flex items-center gap-2">
                 <span className="w-7 h-7 rounded-full bg-[#171717] text-white flex items-center justify-center text-xs font-semibold select-none">
                   {user.name.charAt(0).toUpperCase()}
@@ -201,6 +207,13 @@ export default function Navbar() {
           <div className="border-t border-[#E5E5E5] pt-6 space-y-3">
             {user ? (
               <div className="space-y-3">
+                <Link
+                  href="/my-listings"
+                  onClick={closeMenu}
+                  className="flex items-center px-3 py-2.5 text-sm font-medium text-[#171717] bg-[#F5F5F5] rounded-md"
+                >
+                  My Listings
+                </Link>
                 <div className="flex items-center gap-2.5 px-3 py-2 bg-[#F5F5F5] rounded-md">
                   <span className="w-7 h-7 rounded-full bg-[#171717] text-white flex items-center justify-center text-xs font-semibold select-none">
                     {user.name.charAt(0).toUpperCase()}
