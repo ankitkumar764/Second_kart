@@ -474,7 +474,10 @@ export default async function ProductDetailPage({
               </button>
 
               {/* Secondary: Wishlist (client component) */}
-              <WishlistButton initialState={Boolean(product.isWishlisted)} />
+              <WishlistButton
+                productId={product.id}
+                initialState={Boolean(product.isWishlisted)}
+              />
             </div>
 
             {/* Safety note */}

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/types/product";
+import { useWishlist } from "@/context/WishlistContext";
 
 interface ProductCardProps {
   product: Product;
@@ -14,13 +15,14 @@ export default function ProductCard({
   product,
   viewMode = "grid",
 }: ProductCardProps) {
-  const [isWishlisted, setIsWishlisted] = useState(Boolean(product.isWishlisted));
+  const { isInWishlist, toggleWishlist } = useWishlist();
+  const isWishlisted = isInWishlist(product.id);
   const [imgSrc, setImgSrc] = useState(product.imageUrl);
 
-  const toggleWishlist = (e: React.MouseEvent) => {
+  const handleWishlistClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsWishlisted(!isWishlisted);
+    toggleWishlist(product.id);
   };
 
   if (viewMode === "list") {
@@ -46,7 +48,7 @@ export default function ProductCard({
           {/* Wishlist Button */}
           <button
             type="button"
-            onClick={toggleWishlist}
+            onClick={handleWishlistClick}
             aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
             className={`absolute top-2.5 right-2.5 p-1.5 rounded-full bg-white/90 backdrop-blur-xs shadow-xs transition-colors duration-150 ${
               isWishlisted
@@ -151,7 +153,7 @@ export default function ProductCard({
         {/* Wishlist Heart Icon (Top-Right) */}
         <button
           type="button"
-          onClick={toggleWishlist}
+          onClick={handleWishlistClick}
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
           className={`absolute top-2.5 right-2.5 p-1.5 rounded-full bg-white/90 backdrop-blur-xs shadow-xs transition-colors duration-150 z-10 ${
             isWishlisted
