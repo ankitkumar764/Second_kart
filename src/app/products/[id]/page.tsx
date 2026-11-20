@@ -2,16 +2,24 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { SAMPLE_PRODUCTS } from "@/lib/data/products";
-import { Product } from "@/types/product";
 import WishlistButton from "@/components/products/WishlistButton";
+import { connectDB } from "@/lib/mongodb";
+import ProductModel, { IProduct } from "@/models/Product";
+
+/* ------------------------------------------------------------------ */
+/*  Dynamic rendering — supports both static sample & DB products       */
+/* ------------------------------------------------------------------ */
+
+export const dynamic = "force-dynamic";
 
 /* ------------------------------------------------------------------ */
 /*  Helpers                                                              */
 /* ------------------------------------------------------------------ */
 
-function conditionColor(condition: Product["condition"]): string {
+function conditionColor(condition: string): string {
   switch (condition) {
     case "Brand New":
+    case "New":
       return "bg-emerald-50 text-emerald-700 border-emerald-200";
     case "Like New":
       return "bg-blue-50 text-blue-700 border-blue-200";
@@ -31,11 +39,49 @@ function discount(price: number, originalPrice: number): number {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Static Params (optional for dynamic routes in App Router)           */
+/*  Unified product shape used in this page                             */
 /* ------------------------------------------------------------------ */
 
-export async function generateStaticParams() {
-  return SAMPLE_PRODUCTS.map((p) => ({ id: p.id }));
+interface PageProduct {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  originalPrice?: number;
+  condition: string;
+  category: string;
+  location: string;
+  imageUrl: string;
+  images?: string[];
+  sellerName?: string;
+  sellerCampus?: string;
+  isVerifiedSeller?: boolean;
+  isWishlisted?: boolean;
+  postedAt?: string;
+}
+
+function dbToPage(doc: IProduct): PageProduct {
+  return {
+    id: (doc._id as { toString(): string }).toString(),
+    name: doc.title,
+    description: doc.description,
+    price: doc.price,
+    originalPrice: doc.originalPrice,
+    condition: doc.condition,
+    category: doc.category,
+    location: doc.location,
+    imageUrl: doc.imageUrl || doc.images?.[0] || "",
+    images: doc.images,
+    sellerName: doc.sellerName,
+    sellerCampus: doc.sellerCampus,
+    isVerifiedSeller: doc.isVerifiedSeller,
+    isWishlisted: false,
+    postedAt: new Date(doc.createdAt).toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }),
+  };
 }
 
 /* ------------------------------------------------------------------ */
@@ -48,12 +94,31 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const product = SAMPLE_PRODUCTS.find((p) => p.id === id);
-  if (!product) return { title: "Product Not Found | SecondCart" };
-  return {
-    title: `${product.name} | SecondCart`,
-    description: product.description,
-  };
+
+  // Try sample products first
+  const sample = SAMPLE_PRODUCTS.find((p) => p.id === id);
+  if (sample) {
+    return {
+      title: `${sample.name} | SecondCart`,
+      description: sample.description,
+    };
+  }
+
+  // Try MongoDB
+  try {
+    await connectDB();
+    const doc = await ProductModel.findById(id).lean<IProduct>();
+    if (doc) {
+      return {
+        title: `${doc.title} | SecondCart`,
+        description: doc.description,
+      };
+    }
+  } catch {
+    // ignore
+  }
+
+  return { title: "Product Not Found | SecondCart" };
 }
 
 /* ------------------------------------------------------------------ */
@@ -66,17 +131,52 @@ export default async function ProductDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const product = SAMPLE_PRODUCTS.find((p) => p.id === id);
+
+  let product: PageProduct | null = null;
+  let relatedFromDB: PageProduct[] = [];
+
+  // 1. Check sample products
+  const sampleMatch = SAMPLE_PRODUCTS.find((p) => p.id === id);
+  if (sampleMatch) {
+    product = sampleMatch as unknown as PageProduct;
+  } else {
+    // 2. Query MongoDB
+    try {
+      await connectDB();
+      const doc = await ProductModel.findById(id).lean<IProduct>();
+      if (doc) {
+        product = dbToPage(doc);
+        // Fetch related from DB (same category, exclude current)
+        const relDocs = await ProductModel.find({
+          category: doc.category,
+          _id: { $ne: doc._id },
+          isAvailable: true,
+        })
+          .limit(4)
+          .lean<IProduct[]>();
+        relatedFromDB = relDocs.map(dbToPage);
+      }
+    } catch (err) {
+      console.error("DB lookup error:", err);
+    }
+  }
 
   if (!product) notFound();
 
-  /* Related products: same category, exclude current */
-  const related = SAMPLE_PRODUCTS.filter(
-    (p) => p.category === product.category && p.id !== product.id
-  ).slice(0, 4);
+  /* Related products from same source */
+  const related: PageProduct[] =
+    relatedFromDB.length > 0
+      ? relatedFromDB
+      : (SAMPLE_PRODUCTS.filter(
+          (p) =>
+            p.category === (product as PageProduct).category &&
+            p.id !== (product as PageProduct).id
+        ).slice(0, 4) as unknown as PageProduct[]);
 
   const discountPct =
-    product.originalPrice ? discount(product.price, product.originalPrice) : 0;
+    product.originalPrice
+      ? discount(product.price, product.originalPrice)
+      : 0;
 
   const initials = (product.sellerName ?? "S")
     .split(" ")
@@ -183,6 +283,26 @@ export default async function ProductDetailPage({
                 </div>
               )}
             </div>
+
+            {/* Additional image thumbnails (if from DB with multiple images) */}
+            {product.images && product.images.length > 1 && (
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                {product.images.map((img, idx) => (
+                  <div
+                    key={idx}
+                    className="relative w-16 h-16 shrink-0 rounded-lg border border-[#E5E5E5] bg-[#F1F1F1] overflow-hidden"
+                  >
+                    <Image
+                      src={img}
+                      alt={`${product!.name} image ${idx + 1}`}
+                      fill
+                      sizes="64px"
+                      className="object-contain p-1"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* ============================================================
@@ -194,23 +314,25 @@ export default async function ProductDetailPage({
               <span className="text-xs font-medium text-[#777777] uppercase tracking-wider">
                 {product.category}
               </span>
-              <span className="flex items-center gap-1 text-xs text-[#777777]">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="w-3.5 h-3.5"
-                  aria-hidden="true"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 14" />
-                </svg>
-                {product.postedAt}
-              </span>
+              {product.postedAt && (
+                <span className="flex items-center gap-1 text-xs text-[#777777]">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-3.5 h-3.5"
+                    aria-hidden="true"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                  {product.postedAt}
+                </span>
+              )}
             </div>
 
             {/* Product Name */}
@@ -410,7 +532,7 @@ export default async function ProductDetailPage({
 /*  Related Card (Server Component — no state needed)                   */
 /* ------------------------------------------------------------------ */
 
-function RelatedCard({ product }: { product: Product }) {
+function RelatedCard({ product }: { product: PageProduct }) {
   return (
     <Link
       href={`/products/${product.id}`}
